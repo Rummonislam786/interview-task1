@@ -5,7 +5,6 @@ import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import { useAuth } from "@/context/AuthContext";
 
 interface ProductImage {
   public_id: string;

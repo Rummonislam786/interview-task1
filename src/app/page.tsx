@@ -116,10 +116,10 @@ async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
   console.log(formData);
   checkDomain();
   if (checkingDomain) return;
-    if (e) e.preventDefault();
-    setFormError(null);
+    e.preventDefault();
+    // setFormError(null); // Removed unused variable
     setFieldErrors({});
-    const errors: { [key in FieldKey]?: string } = {};
+    const errors: { [key in FieldKey]?: string } = {}; // Use proper type
 
     if (!formData.storeName || formData.storeName.trim().length < 3) {
       errors.storeName = "Store name must be at least 3 characters.";
@@ -162,7 +162,7 @@ async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
       
       // Redirect to products page
       router.push("/products");
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Error submitting form:", error);
       setFormError("An error occurred while creating your store. Please try again.");
     }
