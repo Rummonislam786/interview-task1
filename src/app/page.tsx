@@ -9,7 +9,7 @@ import { useAuth } from "@/context/AuthContext";
 type FieldKey = "domain" | "storeName" | "currency" | "country" | "category" | "email";
 
 const formFields: Array<{
-  icon: any;
+  icon: React.ElementType;
   title: string;
   description: string;
   type: string;
@@ -74,9 +74,9 @@ export default function Home() {
   const [domainAvailable, setDomainAvailable] = useState<boolean | null>(null);
   const [checkingDomain, setCheckingDomain] = useState(false);
   const [domainError, setDomainError] = useState<string | null>(null);
-  const [formError, setFormError] = useState<string | null>(null);
+  // const [formError, setFormError] = useState<string | null>(null); 
   const [fieldErrors, setFieldErrors] = useState<{ [key in FieldKey]?: string }>({});
-  const [registrationSuccess, setRegistrationSuccess] = useState(false);
+  // const [registrationSuccess, setRegistrationSuccess] = useState(false); 
   const router = useRouter();
   const { login, isAuthenticated } = useAuth();
   
@@ -99,12 +99,12 @@ export default function Home() {
       console.log(data);
       if (data?.data?.taken) {
         setDomainAvailable(false);
-        setDomainError(data?.data?.message || "This domain is already taken!");
+        setDomainError(data?.data?.message || "Not Available Domain,Re-enter!");
       } else {
         setDomainAvailable(true);
         setDomainError(null);
       }
-    } catch (e) {
+    } catch {
       setDomainAvailable(false);
       setDomainError("Error checking domain");
     } finally {
@@ -117,15 +117,14 @@ async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
   checkDomain();
   if (checkingDomain) return;
     e.preventDefault();
-    // setFormError(null); // Removed unused variable
     setFieldErrors({});
-    const errors: { [key in FieldKey]?: string } = {}; // Use proper type
+    const errors: { [key in FieldKey]?: string } = {};
 
     if (!formData.storeName || formData.storeName.trim().length < 3) {
       errors.storeName = "Store name must be at least 3 characters.";
     }
     if (!formData.email || !/^\S+@\S+\.\S+$/.test(formData.email)) {
-      errors.email = "Please enter a valid email address.";
+      errors.email = "Invalid Email Format";
     }
     if (!formData.domain || formData.domain.trim().length < 3) {
       errors.domain = "Domain must be at least 3 characters.";
@@ -146,7 +145,7 @@ async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     }
 
     if (!domainAvailable) {
-      setFormError("Please check domain availability first.");
+      // setFormError("Please check domain availability first.");
       return;
     }
 
@@ -158,18 +157,17 @@ async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
       login(formData);
       
       // Set registration success
-      setRegistrationSuccess(true);
-      
+      // setRegistrationSuccess(true);
       // Redirect to products page
       router.push("/products");
     } catch (error: unknown) {
       console.error("Error submitting form:", error);
-      setFormError("An error occurred while creating your store. Please try again.");
+      // setFormError("An error occurred while creating your store. Please try again.");
     }
 }
 
   const renderField = (field: {
-  icon: any;
+  icon: React.ElementType;
   title: string;
   description: string;
   type: string;
@@ -254,14 +252,26 @@ async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
               Add your basic store information and complete the setup
             </p>
             <hr className="my-2 border-gray-300" />
+{/* {formError && (
+  <div className="my-4 p-3 rounded bg-red-100 text-red-800 border border-red-300">
+    {formError}
+  </div>
+)}
+{registrationSuccess && (
+  <div className="my-4 p-3 rounded bg-green-100 text-green-800 border border-green-300">
+    Registration successful! Redirecting to products page...
+  </div>
+)} */}
           </div>
           <form onSubmit={handleSubmit}>
             {formFields.map(renderField)}
+            <div className="flex justify-end">
             <button
               type="submit"
-              className="w-full sm:w-1/3 md:w-1/5 bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-colors duration-200 self-end mt-4">
+              className="w-full sm:w-1/3 md:w-1/5 bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-colors duration-200 align-self-end justify-self-end mt-4">
               Create Store
             </button>
+            </div>
           </form>
         </div>
       </div>
