@@ -112,7 +112,10 @@ export default function Home() {
     }
   }
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  console.log(formData);
+  checkDomain();
+  if (checkingDomain) return;
     if (e) e.preventDefault();
     setFormError(null);
     setFieldErrors({});
@@ -163,7 +166,7 @@ export default function Home() {
       console.error("Error submitting form:", error);
       setFormError("An error occurred while creating your store. Please try again.");
     }
-  }
+}
 
   const renderField = (field: {
   icon: any;

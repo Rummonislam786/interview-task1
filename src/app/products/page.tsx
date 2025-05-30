@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Card from '@/components/card';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { useAuth } from '@/context/AuthContext';
@@ -38,7 +39,8 @@ export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -86,9 +88,20 @@ export default function ProductsPage() {
       <div className="bg-gradient-to-b from-blue-50 to-white min-h-screen py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           {user && (
-            <div className="bg-white rounded-lg shadow-sm p-4 mb-8">
-              <h2 className="text-lg font-semibold text-gray-800">Welcome to {user.storeName}</h2>
-              <p className="text-sm text-gray-600">Domain: {user.domain}.expressitbd.com | Currency: {user.currency}</p>
+            <div className="bg-white rounded-lg shadow-sm p-4 mb-8 flex justify-between items-center">
+              <div>
+                <h2 className="text-lg font-semibold text-gray-800">Welcome to {user.storeName}</h2>
+                <p className="text-sm text-gray-600">Domain: {user.domain}.expressitbd.com | Currency: {user.currency}</p>
+              </div>
+              <button 
+                onClick={() => {
+                  logout();
+                  router.push('/');
+                }}
+                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition-colors"
+              >
+                Logout
+              </button>
             </div>
           )}
         <div className="text-center mb-12">
